@@ -8,6 +8,7 @@ build:
 
 run:
 	sudo docker run -it --rm --name kali-$(shell date +%s) \
+		--hostname kali \
 		-v $(share):/share \
 		-v $(share)/logs:/logs/ \
 		kali-img
