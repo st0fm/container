@@ -1,0 +1,140 @@
+# ---------- prompt ----------
+# {{{1
+autoload -U colors && colors
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+#RPROMPT="%B%{$fg[blue]%}[%D{%y.%m.%f|%H:%M:%S}]%{$reset_color%}%b"
+
+# 1}}}
+
+# ---------- options ----------
+# {{{1
+setopt appendhistory extendedglob nomatch
+unsetopt beep notify
+unsetopt correctall
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt inc_append_history
+setopt share_history
+setopt rm_star_silent
+
+set -o ignoreeof # stop C+d from killing the shell&term
+# 1}}}
+
+# ---------- auto completion ----------
+# {{{1
+autoload -Uz compinit
+compinit
+
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:kill:*' force-list always
+# 1}}}
+
+# ---------- key bindings ----------
+# {{{1
+bindkey -v # vim mode
+bindkey "^R" history-incremental-pattern-search-backward
+bindkey -s '^n' 'nn\n'
+bindkey -s '^o' 'lfcd\n'
+
+# Edit line in vim with ctrl-e:
+#autoload edit-command-line; zle -N edit-command-line
+#bindkey '^E' edit-command-line
+
+# 1}}}
+
+# ---------- aliases ----------
+# {{{1
+alias ls='ls --color=auto'
+alias sl='ls --color=auto'
+alias ll='ls -lh'
+
+alias ip='ip -c'
+
+
+if hash nvim 2>/dev/null; then
+    export EDITOR=$(which nvim)
+    alias vim='nvim'
+else
+    export EDITOR=$(which vim)
+fi
+# 1}}}
+
+# ---------- history settings ----------
+# {{{1
+HISTSIZE="2000"
+HISTFILE="$HOME/.history"
+SAVEHIST="$HISTSIZE"
+# 1}}}
+
+# ---------- exports ----------
+# {{{1
+export PATH="${HOME}/.scripts/:${HOME}/bin:${HOME}/.local/bin:${HOME}/go/bin:${HOME}/Android/Sdk/platform-tools:$PATH"
+if [ "$SSH_CONNECTION" ]; then
+    export TERM=xterm
+fi
+
+# 1}}}
+
+# ---------- functions ----------
+# {{{1
+
+nn(){
+    # choose from all alias, functions and scripts
+    __tmp=$(
+         ( alias | cut -d'=' -f1
+           print -l ${(ok)functions}
+           find -L ~/.scr/ -type f | grep -v "nn_" | grep -v ".md"
+         ) |
+           grep -v "^_" | fzf
+        )
+    if [[ $__tmp == nn_* ]]; then
+        $__tmp
+    else
+        print -z "$__tmp "
+    fi
+    unset __tmp
+}
+
+lfcd() {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+
+
+gnmap(){
+    awk -e '/Ports: / { host=$2; sub(/.*Ports: /, ""); split($0, a, ","); for(idx in a){ printf "%s: %s\n", host, a[idx] } }' "$1" \
+        | sed "s/ //g" | tr "\t" " " | cut -d" " -f1
+}
+regex(){ gawk 'match($0,/'$1'/, ary) {print ary['${2:-'0'}']}'; }
+
+# 1}}}
+
+# ---------- Plugins ----------
+# {{{1
+
+# FZF
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Custom Scripts
+[ -e ~/.scr ] && for nn in $(find ~/.scr/ -iname "nn_*"); do
+    source "$nn"
+done
+
+# Syntax Highlighting
+if [ -d "/usr/share/zsh-syntax-highlighting" ]; then
+    syntax_hl="/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -d "/usr/share/zsh/plugins/zsh-syntax-highlighting/" ];then
+    syntax_hl="/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+[ -f "$syntax_hl" ] && source "$syntax_hl"
+# 1}}}
