@@ -5,7 +5,7 @@ ARG username
 
 # user setup
 RUN groupadd -g $groupid $username \
- && useradd -m -u $userid -g $groupid $username \
+ && useradd -m -u $userid -g $groupid -s /usr/bin/zsh $username \
  && echo $username > /root/username
 ENV HOME=/home/$username
 ENV USER=$username
