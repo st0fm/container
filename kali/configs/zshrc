@@ -76,7 +76,10 @@ SAVEHIST="$HISTSIZE"
 export PATH="${HOME}/.scripts/:${HOME}/bin:${HOME}/.local/bin:${HOME}/go/bin:${HOME}/Android/Sdk/platform-tools:$PATH"
 if [ "$SSH_CONNECTION" ]; then
     export TERM=xterm
+else
+    export TERM=screen-256color
 fi
+
 
 # 1}}}
 

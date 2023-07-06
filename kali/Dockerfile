@@ -12,23 +12,30 @@ ENV USER=$username
 
 # install packages
 RUN apt update -y \
- && apt install -y mlocate neovim tmux zsh nmap amass sudo htop fzf curl wget socat \
+ && apt install -y mlocate tmux zsh nmap amass sudo htop fzf curl wget socat \
  python3-impacket crackmapexec smbclient mitmproxy ffuf metasploit-framework \
- testssl.sh httpx-toolkit naabu dnsx jadx apktool
+ testssl.sh httpx-toolkit naabu dnsx jadx apktool jq rsync
 
 # install lf
 RUN wget https://github.com/gokcehan/lf/releases/download/r30/lf-linux-amd64.tar.gz \
  && echo -n "8185b7838f84c3f8a9355b76229d24daf155f9001cfd3e3666ead546560d87d7  lf-linux-amd64.tar.gz" | sha256sum -c -  \
  && tar -xf "lf-linux-amd64.tar.gz" -C /usr/local/bin/
 
+# install nvim (version in kali repo is to old)
+RUN wget https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.tar.gz \
+ && echo -n "6c083017304213c3a3efde8d332a52231b8df8206d35146942097c303ebf93d5  nvim-linux64.tar.gz" | sha256sum -c - \
+ && tar -xf "nvim-linux64.tar.gz" -C /tmp/
+ && rsync -a /tmp/nvim-linux64/ /usr/local/
+
+
 # sudo without password
 RUN gpasswd -a $username sudo \
  && echo "%sudo ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # copy configs
-COPY configs/zshrc $HOME/.zshrc
-COPY configs/tmux.conf $HOME/.tmux.conf
-COPY configs/nvim.lua $HOME/.config/nvim/init.lua
+COPY --chown $username:$username configs/zshrc $HOME/.zshrc
+COPY --chown $username:$username configs/tmux.conf $HOME/.tmux.conf
+COPY --chown $username:$username configs/nvim.lua $HOME/.config/nvim/init.lua
 
 ENTRYPOINT chroot --userspec=$(cat /root/username):$(cat /root/username) / \
  /bin/sh -c \
