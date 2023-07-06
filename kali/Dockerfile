@@ -24,7 +24,7 @@ RUN wget https://github.com/gokcehan/lf/releases/download/r30/lf-linux-amd64.tar
 # install nvim (version in kali repo is to old)
 RUN wget https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.tar.gz \
  && echo -n "6c083017304213c3a3efde8d332a52231b8df8206d35146942097c303ebf93d5  nvim-linux64.tar.gz" | sha256sum -c - \
- && tar -xf "nvim-linux64.tar.gz" -C /tmp/
+ && tar -xf "nvim-linux64.tar.gz" -C /tmp/ \
  && rsync -a /tmp/nvim-linux64/ /usr/local/
 
 
@@ -33,9 +33,9 @@ RUN gpasswd -a $username sudo \
  && echo "%sudo ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # copy configs
-COPY --chown $username:$username configs/zshrc $HOME/.zshrc
-COPY --chown $username:$username configs/tmux.conf $HOME/.tmux.conf
-COPY --chown $username:$username configs/nvim.lua $HOME/.config/nvim/init.lua
+COPY --chown=$username:$username configs/zshrc $HOME/.zshrc
+COPY --chown=$username:$username configs/tmux.conf $HOME/.tmux.conf
+COPY --chown=$username:$username configs/nvim.lua $HOME/.config/nvim/init.lua
 
 ENTRYPOINT chroot --userspec=$(cat /root/username):$(cat /root/username) / \
  /bin/sh -c \
