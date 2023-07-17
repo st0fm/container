@@ -13,7 +13,7 @@ ENV USER=$username
 # install packages
 RUN apt update -y \
  && apt install -y mlocate tmux zsh nmap amass sudo htop fzf curl wget socat \
- python3-impacket crackmapexec smbclient mitmproxy ffuf metasploit-framework \
+ python3-impacket python3.11-venv crackmapexec smbclient mitmproxy ffuf metasploit-framework \
  testssl.sh httpx-toolkit naabu dnsx jadx apktool jq rsync
 
 # install lf
