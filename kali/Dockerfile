@@ -12,9 +12,9 @@ ENV USER=$username
 
 # install packages
 RUN apt update -y \
- && apt install -y mlocate tmux zsh nmap amass sudo htop fzf curl wget socat \
+ && apt install -y tmux zsh nmap amass sudo htop fzf curl wget socat \
  python3-impacket python3.11-venv crackmapexec smbclient mitmproxy ffuf metasploit-framework \
- testssl.sh httpx-toolkit naabu dnsx jadx apktool jq rsync nuclei
+ testssl.sh naabu dnsx jadx apktool jq rsync nuclei gawk chromium iproute2 whois
 
 # install lf
 RUN wget https://github.com/gokcehan/lf/releases/download/r30/lf-linux-amd64.tar.gz \
@@ -26,6 +26,18 @@ RUN wget https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.
  && echo -n "6c083017304213c3a3efde8d332a52231b8df8206d35146942097c303ebf93d5  nvim-linux64.tar.gz" | sha256sum -c - \
  && tar -xf "nvim-linux64.tar.gz" -C /tmp/ \
  && rsync -a /tmp/nvim-linux64/ /usr/local/
+
+# install httpx
+RUN wget https://github.com/projectdiscovery/httpx/releases/download/v1.3.4/httpx_1.3.4_linux_amd64.zip \
+  && echo -n "5560e5da12fd66d4215981d9f73c3e10bfd0180d3b3440133e76c2a7bb95a891  httpx_1.3.4_linux_amd64.zip" | sha256sum -c - \
+  && unzip httpx_*_linux_amd64.zip -d /tmp/ \
+  && cp /tmp/httpx /usr/local/bin/
+
+# install aquatone
+RUN wget https://github.com/michenriksen/aquatone/releases/download/v1.7.0/aquatone_linux_amd64_1.7.0.zip \
+  && echo -n "077119d9ccc5e19bb7323a65402aeb4f3460297fb8107efaeeb428e0982fdeac  aquatone_linux_amd64_1.7.0.zip" | sha256sum -c - \
+  && unzip aquatone_linux_amd64*.zip -d /tmp/ \
+  && cp /tmp/aquatone /usr/local/bin/
 
 
 # sudo without password
