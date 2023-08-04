@@ -30,14 +30,14 @@ RUN wget https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.
 # install httpx
 RUN wget https://github.com/projectdiscovery/httpx/releases/download/v1.3.4/httpx_1.3.4_linux_amd64.zip \
   && echo -n "5560e5da12fd66d4215981d9f73c3e10bfd0180d3b3440133e76c2a7bb95a891  httpx_1.3.4_linux_amd64.zip" | sha256sum -c - \
-  && unzip httpx_*_linux_amd64.zip -d /tmp/ \
-  && cp /tmp/httpx /usr/local/bin/
+  && mkdir /tmp/httpx/ && unzip httpx_*_linux_amd64.zip -d /tmp/httpx/ \
+  && cp /tmp/httpx/httpx /usr/local/bin/
 
 # install aquatone
 RUN wget https://github.com/michenriksen/aquatone/releases/download/v1.7.0/aquatone_linux_amd64_1.7.0.zip \
   && echo -n "077119d9ccc5e19bb7323a65402aeb4f3460297fb8107efaeeb428e0982fdeac  aquatone_linux_amd64_1.7.0.zip" | sha256sum -c - \
-  && unzip aquatone_linux_amd64*.zip -d /tmp/ \
-  && cp /tmp/aquatone /usr/local/bin/
+  && mkdir /tmp/aquatone && unzip aquatone_linux_amd64*.zip -d /tmp/aquatone \
+  && cp /tmp/aquatone/aquatone /usr/local/bin/ 
 
 
 # sudo without password
