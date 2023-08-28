@@ -14,7 +14,8 @@ ENV USER=$username
 RUN apt update -y \
  && apt install -y tmux zsh nmap amass sudo htop fzf curl wget socat \
  python3-impacket python3.11-venv crackmapexec smbclient mitmproxy ffuf metasploit-framework \
- testssl.sh naabu dnsx jadx apktool jq rsync nuclei gawk chromium iproute2 whois ripgrep
+ testssl.sh naabu dnsx jadx apktool jq rsync nuclei gawk chromium iproute2 whois ripgrep \
+ zipalign apksigner wireguard
 
 # install lf
 RUN wget https://github.com/gokcehan/lf/releases/download/r30/lf-linux-amd64.tar.gz \
