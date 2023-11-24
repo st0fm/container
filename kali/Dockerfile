@@ -16,7 +16,7 @@ RUN apt update -y \
  python3-impacket impacket-scripts python3.11-venv crackmapexec smbclient mitmproxy ffuf \
  metasploit-framework testssl.sh naabu dnsx jadx apktool jq rsync nuclei gawk chromium \
  iproute2 whois ripgrep zipalign apksigner wireguard proxychains4 xxd powershell binwalk \
- plocate
+ plocate python3-pip netcat-openbsd
 
 # install lf
 RUN wget https://github.com/gokcehan/lf/releases/download/r30/lf-linux-amd64.tar.gz \
@@ -27,11 +27,13 @@ RUN wget https://github.com/gokcehan/lf/releases/download/r30/lf-linux-amd64.tar
 RUN wget https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.tar.gz \
  && echo -n "6c083017304213c3a3efde8d332a52231b8df8206d35146942097c303ebf93d5  nvim-linux64.tar.gz" | sha256sum -c - \
  && tar -xf "nvim-linux64.tar.gz" -C /tmp/ \
- && rsync -a /tmp/nvim-linux64/ /usr/local/
+ && rsync -a /tmp/nvim-linux64/ /usr/local/ \
+ && ln -s /usr/local/bin/nvim /usr/bin/vim
 
 # install httpx
-RUN wget https://github.com/projectdiscovery/httpx/releases/download/v1.3.4/httpx_1.3.4_linux_amd64.zip \
-  && echo -n "5560e5da12fd66d4215981d9f73c3e10bfd0180d3b3440133e76c2a7bb95a891  httpx_1.3.4_linux_amd64.zip" | sha256sum -c - \
+
+RUN wget https://github.com/projectdiscovery/httpx/releases/download/v1.3.7/httpx_1.3.7_linux_amd64.zip \
+  && echo -n "6b4f0c2ba6c91581bb401bdfc0ef1756a20069f34b66413912046142a434ff46  httpx_1.3.7_linux_amd64.zip" | sha256sum -c - \
   && mkdir /tmp/httpx/ && unzip httpx_*_linux_amd64.zip -d /tmp/httpx/ \
   && cp /tmp/httpx/httpx /usr/local/bin/
 
@@ -50,6 +52,7 @@ RUN gpasswd -a $username sudo \
 COPY --chown=$username:$username configs/zshrc $HOME/.zshrc
 COPY --chown=$username:$username configs/tmux.conf $HOME/.tmux.conf
 COPY --chown=$username:$username configs/nvim.lua $HOME/.config/nvim/init.lua
+
 
 ENTRYPOINT chroot --userspec=$(cat /root/username):$(cat /root/username) / \
  /bin/sh -c \
