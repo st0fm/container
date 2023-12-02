@@ -16,7 +16,7 @@ RUN apt update -y \
  python3-impacket impacket-scripts python3.11-venv crackmapexec smbclient mitmproxy ffuf \
  metasploit-framework testssl.sh naabu dnsx jadx apktool jq rsync nuclei gawk chromium \
  iproute2 whois zipalign apksigner wireguard proxychains4 xxd powershell binwalk \
- plocate python3-pip netcat-openbsd hydra
+ plocate python3-pip netcat-openbsd hydra bridge-utils net-tools ethtool
 
 # install lf
 RUN wget https://github.com/gokcehan/lf/releases/download/r30/lf-linux-amd64.tar.gz \
