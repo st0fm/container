@@ -15,7 +15,7 @@ RUN apt update -y \
  && apt install -y tmux zsh nmap amass sudo htop fzf curl wget socat \
  python3-impacket impacket-scripts python3.11-venv crackmapexec smbclient mitmproxy ffuf \
  metasploit-framework testssl.sh naabu dnsx jadx apktool jq rsync nuclei gawk chromium \
- iproute2 whois ripgrep zipalign apksigner wireguard proxychains4 xxd powershell binwalk \
+ iproute2 whois zipalign apksigner wireguard proxychains4 xxd powershell binwalk \
  plocate python3-pip netcat-openbsd hydra
 
 # install lf
@@ -43,6 +43,10 @@ RUN wget https://github.com/michenriksen/aquatone/releases/download/v1.7.0/aquat
   && mkdir /tmp/aquatone && unzip aquatone_linux_amd64*.zip -d /tmp/aquatone \
   && cp /tmp/aquatone/aquatone /usr/local/bin/ 
 
+# install conda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+  && bash ./Miniconda3-latest-Linux-x86_64.sh -b -u -p /home/user/miniconda3 \
+  && chown -R $uername:$username /home/user/miniconda3 
 
 # sudo without password
 RUN gpasswd -a $username sudo \

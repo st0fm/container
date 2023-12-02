@@ -73,7 +73,7 @@ SAVEHIST="$HISTSIZE"
 
 # ---------- exports ----------
 # {{{1
-export PATH="${HOME}/.scripts/:${HOME}/bin:${HOME}/.local/bin:${HOME}/go/bin:${HOME}/Android/Sdk/platform-tools:$PATH"
+export PATH="${HOME}/.scripts/:${HOME}/bin:${HOME}/.local/bin:${HOME}/go/bin:${HOME}/Android/Sdk/platform-tools:${HOME}/miniconda3/bin:${HOME}/miniconda3/sbin:$PATH"
 if [ "$SSH_CONNECTION" ]; then
     export TERM=xterm
 else
@@ -141,3 +141,6 @@ elif [ -d "/usr/share/zsh/plugins/zsh-syntax-highlighting/" ];then
 fi
 [ -f "$syntax_hl" ] && source "$syntax_hl"
 # 1}}}
+
+# conda hook
+eval "$(${HOME}/miniconda3/bin/conda shell.zsh hook)"
